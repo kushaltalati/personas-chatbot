@@ -1,66 +1,57 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import { useState } from "react";
+import { personas, personaList, PersonaId } from "@/lib/personas";
+import PersonaSwitcher from "@/components/PersonaSwitcher";
+import ChatWindow from "@/components/ChatWindow";
+
+const STORAGE_PREFIX = "scaler-chat:";
 
 export default function Home() {
+  const [activeId, setActiveId] = useState<PersonaId>("anshuman");
+  const [chatLoading, setChatLoading] = useState(false);
+  const active = personas[activeId];
+
+  function handleSwitch(id: PersonaId) {
+    if (chatLoading || id === activeId) return;
+    // Rubric: switching persona resets the conversation. Wipe every persona's
+    // saved chat so we don't restore stale history if the user switches back.
+    for (const p of personaList) {
+      localStorage.removeItem(STORAGE_PREFIX + p.id);
+    }
+    setActiveId(id);
+  }
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <main className="app">
+      <header className="header">
+        <h1>Scaler Personas — AI Chatbot</h1>
+        <p>Chat with persona-based AI versions of three Scaler personalities.</p>
+      </header>
+
+      <PersonaSwitcher
+        personas={personaList}
+        activeId={activeId}
+        onSwitch={handleSwitch}
+        disabled={chatLoading}
+      />
+
+      <div
+        className="active-banner"
+        style={{ ["--accent" as string]: active.accentColor }}
+      >
+        <div className="avatar">{active.avatarInitials}</div>
+        <div className="info">
+          <span className="name">Now chatting with {active.name}</span>
+          <span className="blurb">{active.blurb}</span>
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </div>
+
+      <ChatWindow persona={active} onLoadingChange={setChatLoading} />
+
+      <footer className="footer">
+        Built for Scaler Academy · Prompt Engineering Assignment 01
+      </footer>
+    </main>
   );
 }
