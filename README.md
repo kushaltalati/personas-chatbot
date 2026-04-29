@@ -6,7 +6,7 @@ Built as my submission for Scaler Academy's Prompt Engineering Assignment 01.
 
 ## Live demo
 
-Live URL: _add your Vercel URL here once deployed._
+Live URL: https://personas-chatbot-phi.vercel.app/
 
 ## Screenshots
 
@@ -14,7 +14,6 @@ Live URL: _add your Vercel URL here once deployed._
 ![Abhimanyu persona](./docs/abhimanyu.png)
 ![Kshitij persona](./docs/kshitij.png)
 
-> Take three screenshots after deploy (one per active persona) and drop them in `docs/` with the filenames above.
 
 ## What's in here
 
@@ -90,4 +89,4 @@ reflection.md         # 300–500 word reflection (assignment artefact)
 - [x] Persona switcher with per-persona history
 - [x] API errors handled gracefully
 - [x] Mobile responsive
-- [ ] Deployed live URL (paste it in the Live demo section above)
+- [x] Deployed live URL (linked in the Live demo section above)
